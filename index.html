@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Talks Today</title>
+    <style>
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+main {
+    padding: 1rem;
+}
+
+.search-container {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+#searchInput {
+    width: 50%;
+    padding: 0.5rem;
+}
+
+#schedule {
+    display: grid;
+    grid-gap: 1rem;
+}
+
+.talk {
+    background-color: #fff;
+    padding: 1rem;
+    border-left: 5px solid #333;
+}
+
+.talk h2 {
+    margin-top: 0;
+}
+
+.talk .details {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tech Talks Today</h1>
+        <p>A one-day event for tech enthusiasts</p>
+    </header>
+    <main>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search by category...">
+        </div>
+        <div id="schedule"></div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Tech Talks Today</p>
+    </footer>
+    <script>
+const talks = [
+    {
+        title: 'The Future of JavaScript',
+        speakers: ['Jane Doe'],
+        category: ['JavaScript', 'Future Tech'],
+        description: 'A look into the next 5 years of JavaScript development.'
+    },
+    {
+        title: 'CSS Grid for Modern Layouts',
+        speakers: ['John Smith'],
+        category: ['CSS', 'Web Design'],
+        description: 'Learn how to create complex and responsive layouts with CSS Grid.'
+    },
+    {
+        title: 'Building Scalable APIs with Node.js',
+        speakers: ['Peter Jones'],
+        category: ['Node.js', 'APIs'],
+        description: 'An in-depth guide to building robust and scalable APIs.'
+    },
+    {
+        title: 'Introduction to Machine Learning',
+        speakers: ['Mary Johnson'],
+        category: ['Machine Learning', 'AI'],
+        description: 'A beginner-friendly introduction to the world of machine learning.'
+    },
+    {
+        title: 'The Power of Serverless',
+        speakers: ['David Williams'],
+        category: ['Serverless', 'Cloud'],
+        description: 'Discover the benefits of serverless architecture and how to get started.'
+    },
+    {
+        title: 'Cybersecurity in 2025',
+        speakers: ['Susan Brown', 'James Taylor'],
+        category: ['Cybersecurity', 'Security'],
+        description: 'An overview of the latest trends and threats in cybersecurity.'
+    }
+];
+
+const scheduleContainer = document.getElementById('schedule');
+const searchInput = document.getElementById('searchInput');
+
+function generateSchedule(filter = '') {
+    let scheduleHtml = '';
+    let currentTime = new Date('2025-10-27T10:00:00');
+
+    const filteredTalks = talks.filter(talk => 
+        talk.category.some(cat => cat.toLowerCase().includes(filter.toLowerCase()))
+    );
+
+    filteredTalks.forEach((talk, index) => {
+        const startTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        currentTime.setHours(currentTime.getHours() + 1);
+        const endTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        scheduleHtml += `
+            <div class="talk">
+                <h2>${talk.title}</h2>
+                <p class="details">
+                    <strong>Time:</strong> ${startTime} - ${endTime}<br>
+                    <strong>Speakers:</strong> ${talk.speakers.join(', ')}<br>
+                    <strong>Category:</strong> ${talk.category.join(', ')}
+                </p>
+                <p>${talk.description}</p>
+            </div>
+        `;
+
+        if (index === 2) { // Lunch break after the 3rd talk
+            const lunchStartTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            currentTime.setHours(currentTime.getHours() + 1);
+            const lunchEndTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            scheduleHtml += `
+                <div class="talk">
+                    <h2>Lunch Break</h2>
+                    <p class="details">
+                        <strong>Time:</strong> ${lunchStartTime} - ${lunchEndTime}<br>
+                    </p>
+                </div>
+            `;
+        } else if (index < filteredTalks.length - 1) {
+             currentTime.setMinutes(currentTime.getMinutes() + 10);
+        }
+    });
+
+    scheduleContainer.innerHTML = scheduleHtml;
+}
+
+searchInput.addEventListener('keyup', () => {
+    generateSchedule(searchInput.value);
+});
+
+generateSchedule();
+    </script>
+</body>
+</html>
